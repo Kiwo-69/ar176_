@@ -191,15 +191,18 @@
     <div id="model-container">
       <model-viewer
         id="viewer"
-        src=""
-        ios-src=""
+        src="https://storage.yandexcloud.net/176/folding_table.glb"
+        ios-src="https://storage.yandexcloud.net/176/Folding_table.usdz"
         alt="3D модель"
-        auto-rotate
+        auto-rotates
         camera-controls
         ar
+        disable-zoom
         ar-modes="scene-viewer webxr quick-look"
         interaction-prompt="none"
         camera-orbit="0deg 75deg 3m"
+        min-camera-orbit="auto auto 3m"
+        max-camera-orbit="auto auto 3m"
         field-of-view="30deg"
       ></model-viewer>
 
