@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Галерея</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --card-bg: #f5f5f5;
+    }
+
+    body.dark {
+      --bg: #111111;
+      --text: #ffffff;
+      --card-bg: #222222;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #e6e6e6, #ffffff);
+      color: var(--text);
+      transition: background 0.6s ease, color 0.4s ease;
+    }
+
+    body.dark {
+      background: linear-gradient(145deg, #0e0e0e, #1b1b1b);
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background 0.4s ease;
+    }
+
+    .nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    .nav a:hover {
+      color: #00aaff;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    main {
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 1rem;
+      width: 250px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.4s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+      background: white;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    #model-container {
+      margin-top: 3rem;
+      width: 100%;
+      max-width: 800px;
+      height: 500px;
+      display: none;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      --poster-color: transparent;
+    }
+
+    #ar-button {
+      position: absolute;
+      right: 15px;
+      bottom: 15px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #00aaff;
+      color: white;
+      cursor: pointer;
+      display: none;
+      user-select: none;
+      box-shadow: 0 4px 8px rgba(0, 170, 255, 0.5);
+      transition: background-color 0.3s ease;
+    }
+
+    #ar-button:hover {
+      background-color: #0088cc;
+    }
+
+    #ios-ar-link {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="#">Все</a>
+      <a href="#">Мебель</a>
+      <a href="#">Спорт</a>
+      <a href="#">Техника</a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">Сменить тему</button>
+  </header>
+
+  <main>
+    <h1>🛋️ Галерея 3D Моделей</h1>
+
+    <div class="gallery">
+      <div
+        class="card"
+        onclick="showModel('https://storage.yandexcloud.net/176/sofa.glb', 'https://storage.yandexcloud.net/176/sofa.usdz')"
+      >
+        <img src="https://img.icons8.com/ios-filled/250/sofa.png" alt="Диван" />
+        <p>Диван</p>
+      </div>
+    </div>
+
+    <div id="model-container">
+      <model-viewer
+        id="viewer"
+        src=""
+        ios-src=""
+        alt="3D модель"
+        auto-rotate
+        camera-controls
+        ar
+        ar-modes="scene-viewer webxr quick-look"
+        interaction-prompt="none"
+        camera-orbit="0deg 75deg 3m"
+        field-of-view="30deg"
+      ></model-viewer>
+
+      <button id="ar-button">📱 Смотреть в AR</button>
+    </div>
+
+    <a id="ios-ar-link" rel="ar"></a>
+  </main>
+
+  <script>
+    let currentGLB = "";
+    let currentUSDZ = "";
+
+    function showModel(glbUrl, usdzUrl) {
+      const container = document.getElementById("model-container");
+      const viewer = document.getElementById("viewer");
+      const arButton = document.getElementById("ar-button");
+
+      currentGLB = glbUrl;
+      currentUSDZ = usdzUrl;
+
+      viewer.src = glbUrl;
+      viewer.setAttribute("ios-src", usdzUrl);
+      container.style.display = "block";
+
+      const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      arButton.style.display = isMobile ? "inline-block" : "none";
+
+      window.scrollTo({ top: container.offsetTop, behavior: "smooth" });
+    }
+
+    document.getElementById("ar-button").addEventListener("click", () => {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+      if (isIOS && currentUSDZ) {
+        const iosLink = document.getElementById("ios-ar-link");
+        iosLink.href = currentUSDZ + "#allowsContentScaling=0";
+        iosLink.click();
+      } else {
+        const viewer = document.getElementById("viewer");
+        viewer.activateAR();
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark") ? "dark" : "light"
+      );
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
+      }
+    });
+  </script>
+</body>
+</html>
