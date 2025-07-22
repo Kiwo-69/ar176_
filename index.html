@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Карточка Crocs</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
@@ -13,10 +14,10 @@
 
     body {
       font-family: sans-serif;
-      background: #fafafa;
+      background: #f0f0f0;
       display: flex;
-      height: 100vh;
       flex-direction: column;
+      min-height: 100vh;
     }
 
     header {
@@ -32,33 +33,63 @@
     }
 
     main {
+      flex: 1;
       display: flex;
+      flex-direction: column;
       margin-top: 60px;
-      height: calc(100vh - 60px);
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .left, .right {
+      flex: 1 1 300px;
+      min-width: 280px;
     }
 
     .left {
-      width: 40%;
-      background: #f2f2f2;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #f9f9f9;
+      border-radius: 10px;
       padding: 20px;
     }
 
     .left img {
-      max-width: 90%;
-      max-height: 90%;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     .right {
-      width: 60%;
-      padding: 30px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
+      padding: 10px;
+    }
+
+    h2 {
+      font-size: 24px;
+      color: #222;
+    }
+
+    p {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .price {
+      font-size: 20px;
+      color: red;
     }
 
     button {
@@ -89,9 +120,29 @@
 
     #ar-button {
       background: #444;
+      margin-top: 10px;
+    }
+
+    footer {
+      background: #222;
+      color: white;
+      padding: 20px 30px;
+      font-size: 14px;
+    }
+
+    footer h3 {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    footer p {
+      margin: 5px 0;
     }
 
     @media (min-width: 768px) {
+      main {
+        padding: 40px;
+      }
       #ar-button {
         display: none;
       }
@@ -105,33 +156,48 @@
   </header>
 
   <main>
-    <div class="left">
-      <img src="stil.jpg" alt="table">
-    </div>
+    <div class="container">
+      <div class="left">
+        <img src="stil.jpg" alt="table">
+      </div>
 
-    <div class="right">
-      <h2>Стол раскладной туристический</h2>
-      <p><b>Цвет:</b> Белый</p>
-      <p><b>Цена:</b> <span style="color: red;">5 800 руб.</span> <small>(-25%)</small></p>
+      <div class="right">
+        <h2>Стол раскладной туристический</h2>
+        <p><b>Цвет:</b> Белый</p>
+        <p><b>Цена:</b> <span class="price">5 800 руб.</span> <small>(-25%)</small></p>
 
-      <button id="toggle-model">Показать 3D</button>
+        <p><b>Описание:</b> Лёгкий, компактный и удобный в транспортировке. Идеально подходит для пикников, дачи и кемпинга.</p>
+        <p><b>Материалы:</b> Прочный алюминий, влагостойкая столешница.</p>
+        <p><b>Размер:</b> 120×60×70 см в разложенном виде.</p>
+        <p><b>Особенности:</b> Быстро складывается, регулируемые ножки, чехол в комплекте.</p>
 
-      <div id="model-container">
-        <model-viewer
-          id="viewer"
-          src="https://storage.yandexcloud.net/176/folding_table.glb"
-          ios-src="https://storage.yandexcloud.net/176/Folding_table.usdz"
-          alt="3D модель"
-          auto-rotate
-          camera-controls
-          ar
-          ar-modes="scene-viewer webxr quick-look"
-          interaction-prompt="none">
-        </model-viewer>
-        <button id="ar-button">AR</button>
+        <button id="toggle-model">Показать 3D</button>
+
+        <div id="model-container">
+          <model-viewer
+            id="viewer"
+            src="https://storage.yandexcloud.net/176/folding_table.glb"
+            ios-src="https://storage.yandexcloud.net/176/Folding_table.usdz"
+            alt="3D модель"
+            auto-rotate
+            camera-controls
+            ar
+            ar-modes="scene-viewer webxr quick-look"
+            interaction-prompt="none">
+          </model-viewer>
+          <button id="ar-button">AR</button>
+        </div>
       </div>
     </div>
   </main>
+
+  <footer>
+    <h3>О нас</h3>
+    <p>Мы — команда AR176, занимаемся разработкой решений с дополненной реальностью и 3D.</p>
+    <p><b>Адрес:</b> г. Москва, ул. Примерная, д. 1</p>
+    <p><b>Телефон:</b> +7 (999) 123-45-67</p>
+    <p><b>Email:</b> support@ar176.ru</p>
+  </footer>
 
   <a id="ios-ar-link" rel="ar"></a>
 
