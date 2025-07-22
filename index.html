@@ -5,19 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Карточка Crocs</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #f0f0f0;
+      --text: #222;
+      --subtext: #333;
+      --price: #d50000;
+      --btn-bg: #0066cc;
+      --btn-bg-hover: #004999;
+      --card-bg: #ffffff;
+      --footer-bg: #222;
+      --footer-text: white;
+      --accent-pink: #ffe4ec;
+      --btn-gradient: linear-gradient(135deg, #ff9eb3, #ffd6d6);
+    }
+
+    .dark {
+      --bg: #121212;
+      --text: #f5f5f5;
+      --subtext: #dddddd;
+      --price: #ff8a80;
+      --btn-bg: #3333aa;
+      --btn-bg-hover: #222288;
+      --card-bg: #ffffff;
+      --footer-bg: #111;
+      --footer-text: #eee;
+      --btn-gradient: linear-gradient(135deg, #4444cc, #222288);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      transition: all 0.3s ease;
     }
 
     body {
-      font-family: sans-serif;
-      background: #f0f0f0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top right, #d6e4ff, transparent 70%), radial-gradient(circle at bottom left, #ffd6d6, transparent 70%);
+      z-index: -1;
+      opacity: 0.5;
+      pointer-events: none;
     }
 
     header {
@@ -25,108 +70,153 @@
       color: white;
       padding: 15px 30px;
       font-size: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       position: fixed;
       top: 0;
       width: 100%;
       z-index: 1000;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-left {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 10px;
+    }
+
+    .theme-btn {
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 14px;
+      cursor: pointer;
     }
 
     main {
-      flex: 1;
+      padding: 100px 20px 40px;
       display: flex;
       flex-direction: column;
-      margin-top: 60px;
-      padding: 20px;
-      gap: 20px;
+      gap: 30px;
+      flex: 1;
     }
 
     .container {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 30px;
+      justify-content: center;
     }
 
     .left, .right {
-      flex: 1 1 300px;
+      flex: 1 1 360px;
       min-width: 280px;
     }
 
     .left {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f9f9f9;
-      border-radius: 10px;
-      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     }
 
     .left img {
       width: 100%;
-      max-width: 100%;
       height: auto;
       object-fit: contain;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
     }
 
     .right {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      padding: 10px;
     }
 
     h2 {
-      font-size: 24px;
-      color: #222;
+      font-size: 26px;
+      margin-bottom: 5px;
     }
 
     p {
       font-size: 16px;
-      color: #333;
+      color: var(--subtext);
     }
 
     .price {
       font-size: 20px;
-      color: red;
+      color: var(--price);
     }
 
     button {
-      padding: 10px 20px;
-      background: #0066cc;
+      padding: 10px 22px;
+      background: var(--btn-bg);
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
-      width: fit-content;
-      transition: background 0.3s;
+      font-size: 15px;
     }
 
     button:hover {
-      background: #004999;
+      background: var(--btn-bg-hover);
+    }
+
+    #toggle-model {
+      background: var(--btn-gradient);
+      color: #222;
+      font-weight: 600;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(255, 158, 179, 0.4);
+      transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark #toggle-model {
+      background: linear-gradient(135deg, #4444cc, #222288);
+      color: white;
+      box-shadow: 0 4px 10px rgba(100, 100, 255, 0.3);
+    }
+
+    #toggle-model:hover {
+      transform: scale(1.03);
+      background: linear-gradient(135deg, #ffb0c6, #ffe6e6);
+    }
+
+    body.dark #toggle-model:hover {
+      background: linear-gradient(135deg, #5555dd, #333399);
     }
 
     #model-container {
       display: none;
+      animation: modelIn 1s ease-in-out;
     }
 
     model-viewer {
       width: 100%;
-      height: 400px;
+      height: 420px;
+      border-radius: 10px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    #ar-button {
-      background: #444;
-      margin-top: 10px;
+      background-color: var(--card-bg);
+      animation: rotateModel 5s ease-in-out infinite alternate;
     }
 
     footer {
-      background: #222;
-      color: white;
-      padding: 20px 30px;
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 18px 30px;
       font-size: 14px;
     }
 
@@ -136,15 +226,39 @@
     }
 
     footer p {
-      margin: 5px 0;
+      margin: 4px 0;
     }
 
-    @media (min-width: 768px) {
-      main {
-        padding: 40px;
+    .bg-fix {
+      height: 0px;
+      background: var(--footer-bg);
+    }
+
+    @keyframes modelIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) rotateX(10deg);
       }
-      #ar-button {
-        display: none;
+      to {
+        opacity: 1;
+        transform: scale(1) rotateX(0deg);
+      }
+    }
+
+    @keyframes rotateModel {
+      from {
+        transform: rotateY(0deg);
+      }
+      to {
+        transform: rotateY(10deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
       }
     }
   </style>
@@ -152,27 +266,28 @@
 <body>
 
   <header>
-    AR176-AR-Preview
+    <div class="header-left">AR176-AR-Preview</div>
+    <div class="header-right">
+      <button class="theme-btn" onclick="toggleTheme()">Сменить тему</button>
+      <button class="theme-btn">Контакты</button>
+    </div>
   </header>
 
   <main>
     <div class="container">
       <div class="left">
-        <img src="stil.jpg" alt="table">
+        <img src="stil.jpg" alt="table" />
       </div>
 
       <div class="right">
         <h2>Стол раскладной туристический</h2>
         <p><b>Цвет:</b> Белый</p>
         <p><b>Цена:</b> <span class="price">5 800 руб.</span> <small>(-25%)</small></p>
-
         <p><b>Описание:</b> Лёгкий, компактный и удобный в транспортировке. Идеально подходит для пикников, дачи и кемпинга.</p>
         <p><b>Материалы:</b> Прочный алюминий, влагостойкая столешница.</p>
         <p><b>Размер:</b> 120×60×70 см в разложенном виде.</p>
         <p><b>Особенности:</b> Быстро складывается, регулируемые ножки, чехол в комплекте.</p>
-
-        <button id="toggle-model">Показать 3D</button>
-
+        <button id="toggle-model">Включить 3D-просмотр</button>
         <div id="model-container">
           <model-viewer
             id="viewer"
@@ -192,11 +307,12 @@
 
   <footer>
     <h3>О нас</h3>
-    <p>Мы — команда AR176, занимаемся разработкой решений с дополненной реальностью и 3D.</p>
+    <p>Команда AR176 — создаём AR-решения нового поколения.</p>
     <p><b>Адрес:</b> г. Москва, ул. Примерная, д. 1</p>
-    <p><b>Телефон:</b> +7 (999) 123-45-67</p>
-    <p><b>Email:</b> support@ar176.ru</p>
+    <p><b>Тел:</b> +7 (999) 123-45-67 | <b>Email:</b> support@ar176.ru</p>
   </footer>
+
+  <div class="bg-fix"></div>
 
   <a id="ios-ar-link" rel="ar"></a>
 
@@ -207,25 +323,12 @@
     toggleBtn.addEventListener("click", () => {
       const visible = modelContainer.style.display === "block";
       modelContainer.style.display = visible ? "none" : "block";
-      toggleBtn.textContent = visible ? "Показать 3D" : "Убрать 3D";
+      toggleBtn.textContent = visible ? "Включить 3D-просмотр" : "Скрыть 3D-просмотр";
     });
 
-    const arButton = document.getElementById("ar-button");
-    const viewer = document.getElementById("viewer");
-
-    arButton.addEventListener("click", () => {
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      const usdzUrl = "https://storage.yandexcloud.net/176/Folding_table.usdz";
-
-      if (isIOS) {
-        const iosLink = document.getElementById("ios-ar-link");
-        iosLink.href = usdzUrl + "#allowsContentScaling=0";
-        iosLink.click();
-      } else {
-        viewer.activateAR();
-      }
-    });
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
   </script>
-
 </body>
 </html>
